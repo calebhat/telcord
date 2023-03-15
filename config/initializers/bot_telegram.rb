@@ -1,29 +1,12 @@
-require 'discordrb'
 require 'telegram/bot'
 
 
-bot = Discordrb::Bot.new token: ''
-
-bot.message(channel: '1057105582169014364') do |event|
-  puts event.author.username
-  puts event.content
-  frank = event.author.username + " sends: " + event.content
-  event.respond frank
-end
-
-
-bot.run(true)
-
-
-
-
-
-token = ''
+token = '6202881381:AAHQUj0LFIEWe2q60MOHwn6MYzvt0mL4C5o'
 
 
 #​
 Telegram::Bot::Client.run(token) do |bot|
-  bot.listen do |message|
+  client.listen do |message|
     case message.text
     when '/start'
       bot.api.send_message(chat_id: message.chat.id, text: "Hello, #{message.from.first_name}")
