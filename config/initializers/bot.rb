@@ -3,12 +3,12 @@ require 'telegram/bot'
 
 telegramToken = ''
 discordBot = Discordrb::Bot.new token: ''
-discordChannel = 978081418833956954 #Adosia General
-telegramChatId = -1001487636917 #Adosia telegram
+#discordChannel = 978081418833956954 #Adosia General
+#telegramChatId = -1001487636917 #Adosia telegram
 
 #testing
-#discordChannel = 1057105582169014364
-#telegramChatId = -991949802
+discordChannel = 1057105582169014364
+telegramChatId = -991949802
 
 
 #Working Discord to Telegram bot
@@ -21,7 +21,11 @@ discordBot.message(channel: discordChannel) do |event| #listens for any new mess
       bot.api.send_message(chat_id: telegramChatId, text: toSend) #send to telegram
       #bot.api.send_message(chat_id: telegramChatId, text: event.content) #send to telegram
     else
-      toSend = event.author.username + " from Discord: " + event.content
+      if event.content == nil || event.content == ""
+        toSend = event.author.username + " sent an attachment/picture in Discord"
+      else
+        toSend = event.author.username + " from Discord: " + event.content
+      end
       bot.api.send_message(chat_id: telegramChatId, text: toSend) #send to telegram
     end
    end
