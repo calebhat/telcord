@@ -3,21 +3,29 @@ require 'telegram/bot'
 
 telegramToken = ''
 discordBot = Discordrb::Bot.new token: ''
-discordChannel = 978081418833956954
-telegramChatId = -1001487636917
+discordChannel = 978081418833956954 #Adosia General
+telegramChatId = -1001487636917 #Adosia telegram
+
+#testing
+#discordChannel = 1057105582169014364
+#telegramChatId = -991949802
+
 
 #Working Discord to Telegram bot
 discordBot.message(channel: discordChannel) do |event| #listens for any new message in discord
+  puts event.channel
   Telegram::Bot::Client.run(telegramToken) do |bot|
     #puts event.author.username
-    #puts event.content
-    frank = event.author.username + " sends from Discord: " + event.content
-    #event.respond frank #send to discord
-    bot.api.send_message(chat_id: telegramChatId, text: frank) #send to telegram
+    if event.content.include?("discordapp.net/attachments") || event.content.include?(".com")
+      toSend = event.author.username + " from Discord: " + event.content
+      bot.api.send_message(chat_id: telegramChatId, text: toSend) #send to telegram
+      #bot.api.send_message(chat_id: telegramChatId, text: event.content) #send to telegram
+    else
+      toSend = event.author.username + " from Discord: " + event.content
+      bot.api.send_message(chat_id: telegramChatId, text: toSend) #send to telegram
+    end
    end
 end
-
-# adosia telegram chat group id: =1001487636917
 
 
 discordBot.run(true)
@@ -29,36 +37,19 @@ discordBot.run(true)
 @started = false
 Telegram::Bot::Client.run(telegramToken) do |bot|
   bot.listen do |message|
-    if message.text.exclude?("sends:")
-      
-      #if message.text.to_s == "/bail" && @started == true
-      #  return
-      #else
-      #  @started = true
-      #end
+    if message.try(:text) != nil #check if API is sending correct data
+      if message.text.exclude?("Discord:") #makes sure a loop doesn't happen
+        
+        if message.text.to_s == "/bail" && @started == true #Testing bailout if needed
+          return
+        else
+          @started = true
+        end
 
-      sendToDiscord = message.from.first_name + " " + message.from.last_name.to_s + "sends from Telegram: " + message.text
-      discordBot.send_message(discordChannel, sendToDiscord)
+        sendToDiscord = message.from.first_name + " " + message.from.last_name.to_s + " from Telegram: " + message.text
+        discordBot.send_message(discordChannel, sendToDiscord)
+      end
     end
   
   end
 end
-
-
-#    if message.text.exclude?("sends:")
-#      bot.api.send_message(chat_id: message.chat.id, text: "Rubyfu, where Ruby goes eveil!")
-#    end
-
-
-#cd mnt/d/railsapps/test/telcord
-
-
-#Now attempting to send back to discord
-#@telcord_coms_bot hello
-#<Telegram::Bot::Types::ChatMemberUpdated:0x00007fdb2af3f4c8>
-
-#<Telegram::Bot::Types::Message:0x00007f8ddd6b3a88>
-
-
-#for direct message
-#sendToDiscord = message.chat.first_name + " " + message.chat.last_name.to_s + "sends: " + message.text
